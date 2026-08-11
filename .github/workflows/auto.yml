@@ -1,39 +1,33 @@
-name: Automatic File Creation
+name: Daily Random Commits
 
 on:
   schedule:
-    - cron: "0 3,15 * * *"
+    - cron: '30 12 * * *'
   workflow_dispatch:
 
 jobs:
-  create-file:
+  random-commits:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write
+    
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          token: "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"
-
-      - name: Create new file
+      - uses: actions/checkout@v4
+      
+      - name: Setup Git
         run: |
-          count=1
-
-          while [ -f "file$count.txt" ]
-          do
-            ((count++))
-          done
-
-          touch "file$count.txt"
-
-          echo "file$count.txt created successfully"
-
-      - name: Commit and Push
-        run: |
-          git config user.name "Soumyadeepjana1"
+          git config user.name "soumyadeepjana1"
           git config user.email "soumyadeepjana368@gmail.com"
-
-          git add .
-          git commit -m "Auto create new file" || echo "Nothing to commit"
-          git push
-
+      
+      - name: Do Everything
+        run: |
+          git pull origin master
+          NUM_COMMITS=$(( RANDOM % 5 + 1 ))
+          mkdir -p streak-data
+          for i in $(seq 1 $NUM_COMMITS); do
+            echo "Commit $i" >> streak-data/streak.txt
+            git add streak-data/
+            git commit -m "Streak commit $i"
+            sleep 2
+          done
+          git push origin master
