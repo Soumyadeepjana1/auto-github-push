@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          token: "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"
 
       - name: Create new file
         run: |
@@ -34,3 +36,4 @@ jobs:
           git add .
           git commit -m "Auto create new file" || echo "Nothing to commit"
           git push
+
