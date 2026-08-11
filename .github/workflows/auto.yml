@@ -24,12 +24,12 @@ jobs:
 
           touch "file$count.txt"
 
-          echo "file$count.txt created"
+          echo "file$count.txt created successfully"
 
       - name: Commit and Push
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "Soumyadeepjana1"
+          git config user.email "soumyadeepjana368@gmail.com"
 
           git add .
           git commit -m "Auto create new file" || echo "Nothing to commit"
