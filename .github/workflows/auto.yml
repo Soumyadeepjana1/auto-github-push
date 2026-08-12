@@ -1,44 +1,38 @@
 name: Daily Random Commits
 on:
   schedule:
+    - cron: '40 4 * * *'   # 10:10 AM IST (UTC+5:30)
+    - cron: '30 6 * * *'   # 12:00 PM IST (UTC+5:30)
     - cron: '30 7 * * *'   # 1:00 PM IST (UTC+5:30)
   workflow_dispatch:
-
 concurrency:
   group: streak-commits
   cancel-in-progress: false
-
 jobs:
   random-commits:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
       - name: Setup Git
         run: |
           git config user.name "soumyadeepjana1"
           git config user.email "soumyadeepjana368@gmail.com"
-
       - name: Do Everything
         shell: bash
         run: |
           set -e
           git pull origin master
-
           NUM_COMMITS=$(( RANDOM % 5 + 1 ))
           mkdir -p streak-data
-
           for i in $(seq 1 $NUM_COMMITS); do
             echo "Commit $i - $(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> streak-data/streak.txt
             git add streak-data/
             git commit -m "Streak commit $i"
             sleep 2
           done
-
           # Push with retry in case remote moved ahead
           git push origin master || (git pull --rebase origin master && git push origin master)
